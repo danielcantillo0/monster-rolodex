@@ -6,7 +6,7 @@ type SearchBoxProps = {
   placeholder?: string;
   onSearchHandler: ChangeEventHandler<HTMLInputElement>;
 };
-
+/* type vs interface, generic types given by react */
 
 const SearchBox = ({
   className,

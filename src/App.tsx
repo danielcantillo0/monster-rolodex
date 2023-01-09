@@ -1,18 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 
 import "./App.css";
 import CardList from "./components/card-list/card-list";
 import SearchBox from "./components/search-box/search-box";
+import { getData } from "./utils/data.utils";
+
+export type Monster = {
+  id: string;
+  name: string;
+  email: string;
+};
 
 const App = () => {
   const [searchString, setSearchString] = useState("");
-  const [monsters, setMonsters] = useState([]);
+  const [monsters, setMonsters] = useState<Monster[]>([]);
   const [filteredmonsters, setFilteredmonsters] = useState(monsters);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) => setMonsters(users));
+    // fetch("https://jsonplaceholder.typicode.com/users")
+    //   .then((response) => response.json())
+    //   .then((users) => setMonsters(users));
+
+    const fetchUsers = async () => {
+      const users = await getData<Monster[]>(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      setMonsters(users);
+    };
+
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -24,7 +40,7 @@ const App = () => {
 
   console.log(searchString);
 
-  const onSearchchange = (event) => {
+  const onSearchchange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchStringLowercase = event.target.value.toLocaleLowerCase();
     setSearchString(searchStringLowercase);
   };
@@ -34,9 +50,9 @@ const App = () => {
       <h1 className="app-title">Adopt a Monster</h1>
       <p className="app-description">Pick your favorite monster</p>
       <SearchBox
-        onSearchhandler={onSearchchange}
+        onSearchHandler={onSearchchange}
         className="monster-search-box"
-        placeholder="search monsters"
+        placeholder="Search Monsters"
       />
       {<CardList monsters={filteredmonsters} />}
     </div>
